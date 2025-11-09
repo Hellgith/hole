@@ -1,0 +1,140 @@
+SOFTWARE LABORATORY 1
+GROUP A – EXPERIMENT 7
+TITLE:
+Write a program to implement MySQL/Oracle database connectivity with any front end language to implement Database navigation operations (add, delete, edit etc.)
+CODE:
+Step 1: Create a Database and Table
+mysql> CREATE DATABASE student_db;
+Query OK, 1 row affected (0.01 sec)
+mysql> USE student_db;
+Database changed
+mysql> CREATE TABLE students (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100), age INT, course VARCHAR(100));
+Query OK, 0 rows affected (0.04 sec)
+ mysql> EXIT;
+
+Step 2: Install Connector (Python ↔ MySQL)
+pip install mysql-connector-python
+
+Step 3: Write the Python Code
+import mysql.connector
+from tkinter import *
+from tkinter import messagebox
+ 
+# ---------- Connect to MySQL ----------
+def connect_db():
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",       # change if you used another username
+        password="1234",   # your MySQL password
+        database="student_db"
+    )
+ 
+# ---------- Functions ----------
+def add_record():
+    name = name_entry.get()
+    age = age_entry.get()
+    course = course_entry.get()
+ 
+    if name == "" or age == "" or course == "":
+        messagebox.showwarning("Warning", "Please fill all fields")
+        return
+ 
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO students (name, age, course) VALUES (%s, %s, %s)", (name, age, course))
+    conn.commit()
+    conn.close()
+    messagebox.showinfo("Success", "Record added successfully")
+    clear_fields()
+    view_records()
+ 
+def view_records():
+    listbox.delete(0, END)
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM students")
+    rows = cursor.fetchall()
+    for row in rows:
+        listbox.insert(END, row)
+    conn.close()
+ 
+def delete_record():
+    try:
+        selected = listbox.get(listbox.curselection())
+        student_id = selected[0]
+        conn = connect_db()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM students WHERE id=%s", (student_id,))
+        conn.commit()
+        conn.close()
+        messagebox.showinfo("Deleted", "Record deleted successfully")
+        view_records()
+    except:
+        messagebox.showwarning("Warning", "Please select a record to delete")
+ 
+def edit_record():
+    try:
+        selected = listbox.get(listbox.curselection())
+        student_id = selected[0]
+        name = name_entry.get()
+        age = age_entry.get()
+        course = course_entry.get()
+ 
+        conn = connect_db()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE students SET name=%s, age=%s, course=%s WHERE id=%s", (name, age, course, student_id))
+        conn.commit()
+        conn.close()
+        messagebox.showinfo("Updated", "Record updated successfully")
+        view_records()
+    except:
+        messagebox.showwarning("Warning", "Please select a record to update")
+ 
+def clear_fields():
+    name_entry.delete(0, END)
+    age_entry.delete(0, END)
+    course_entry.delete(0, END)
+ 
+# ---------- GUI ----------
+root = Tk()
+root.title("MySQL Database Navigation")
+root.geometry("500x500")
+ 
+Label(root, text="Name").pack()
+name_entry = Entry(root, width=40)
+name_entry.pack()
+ 
+Label(root, text="Age").pack()
+age_entry = Entry(root, width=40)
+age_entry.pack()
+ 
+Label(root, text="Course").pack()
+course_entry = Entry(root, width=40)
+course_entry.pack()
+ 
+Button(root, text="Add Record", command=add_record).pack(pady=5)
+Button(root, text="View Records", command=view_records).pack(pady=5)
+Button(root, text="Edit Record", command=edit_record).pack(pady=5)
+Button(root, text="Delete Record", command=delete_record).pack(pady=5)
+Button(root, text="Clear Fields", command=clear_fields).pack(pady=5)
+ 
+listbox = Listbox(root, width=60)
+listbox.pack(pady=10)
+ 
+view_records()
+root.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+Output:
+ 
+
+

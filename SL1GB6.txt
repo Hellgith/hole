@@ -1,0 +1,51 @@
+SOFTWARE LABORATORY 1
+GROUP B – EXPERIMENT 6
+TITLE:
+Develop an elementary chatbot for any suitable customer interaction application.
+CODE:
+# Elementary Chatbot for Café Customer Interaction
+def chatbot_response(user_input): 
+    user_input = user_input.lower()
+    if "hello" in user_input or "hi" in user_input:
+        return "Hello! Welcome to Brew Bliss Café! How can I help you today?"
+    elif "menu" in user_input:
+        return "Our menu includes coffee, tea, sandwiches, and pastries. What would you like to order?"
+    elif "coffee" in user_input:
+        return "We have Cappuccino, Latte, and Espresso. Which one would you like?"
+    elif "tea" in user_input:
+        return "We offer Green Tea, Masala Chai, and Lemon Tea. Which one do you prefer?"
+    elif "sandwich" in user_input:
+        return "We have Veg Club Sandwich and Grilled Cheese Sandwich. Would you like one?"
+    elif "price" in user_input:
+        return "Our drinks range from ₹100–₹180, and snacks from ₹80–₹150."
+    elif "timing" in user_input:
+        return "We’re open from 8 AM to 8 PM every day!"
+    elif "location" in user_input:
+        return "We’re located at MG Road, Pune — opposite City Mall."
+    elif "thank" in user_input:
+        return "You're very welcome! "
+    elif "bye" in user_input or "exit" in user_input:
+        return "Goodbye! Have a great day and see you again at Brew Bliss Café! "
+    else:
+        return "I'm sorry, I didn't understand that. Could you please rephrase?"
+ 
+# --- Main Chat Loop ---
+print("Brew Bliss Chatbot: Hello! Type 'bye' to exit.") 
+while True: 
+    user_message = input("You: ") 
+    response = chatbot_response(user_message) 
+    print("Chatbot:", response) 
+    if "bye" in user_message.lower() or "exit" in user_message.lower(): 
+        break
+Output:
+Brew Bliss Chatbot: Hello! Type 'bye' to exit.
+You: hi
+Chatbot: Hello! Welcome to Brew Bliss Café! How can I help you today?
+You: show me menu
+Chatbot: Our menu includes coffee, tea, sandwiches, and pastries. What would you like to order?
+You: coffee
+Chatbot: We have Cappuccino, Latte, and Espresso. Which one would you like?
+You: bye
+Chatbot: Goodbye! Have a great day and see you again at Brew Bliss Café! 
+
+

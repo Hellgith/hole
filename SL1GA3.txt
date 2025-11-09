@@ -1,0 +1,147 @@
+SOFTWARE LABORATORY 1
+GROUP A – EXPERIMENT 3
+TITLE:
+MongoDB Queries: Design and Develop MongoDB Queries using CRUD operations. (Use CRUD operations, SAVE method, logical operators etc.).
+
+CODE:
+(base) student@student-HP-Pro-Tower-280-G9-PCI-Desktop-PC:~$ mongosh
+
+test> use schoolDB
+
+switched to db schoolDB
+
+schoolDB> db.students.insertMany([{ name: "Alice", age: 22, course: "CS", gpa: 3.7, graduated: false }, { name: "Bob", age: 24, course: "IT", gpa: 3.4, graduated: true }, { name: "Charlie", age: 21, course: "DS", gpa: 3.8, graduated: false }, { name: "Diana", age: 23, course: "AI", gpa: 3.9, graduated: true }])
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('688b19637c3a754a6ac59f35'),
+    '1': ObjectId('688b19637c3a754a6ac59f36'),
+    '2': ObjectId('688b19637c3a754a6ac59f37'),
+    '3': ObjectId('688b19637c3a754a6ac59f38')
+  }
+}
+
+schoolDB> db.students.insertOne({ name: "Eve", age: 25, course: "Cybersecurity", gpa: 3.5, graduated: false})
+
+{
+  acknowledged: true,
+  insertedId: ObjectId('688b19837c3a754a6ac59f39')
+}
+
+schoolDB> db.students.find().pretty()
+
+[
+  {
+    _id: ObjectId('688b19637c3a754a6ac59f35'),
+    name: 'Alice',
+    age: 22,
+    course: 'CS',
+    gpa: 3.7,
+    graduated: false
+  },
+  {
+    _id: ObjectId('688b19637c3a754a6ac59f36'),
+    name: 'Bob',
+    age: 24,
+    course: 'IT',
+    gpa: 3.4,
+    graduated: true
+  },
+  {
+    _id: ObjectId('688b19637c3a754a6ac59f37'),
+    name: 'Charlie',
+    age: 21,
+    course: 'DS',
+    gpa: 3.8,
+    graduated: false
+  },
+  {
+    _id: ObjectId('688b19637c3a754a6ac59f38'),
+    name: 'Diana',
+    age: 23,
+    course: 'AI',
+    gpa: 3.9,
+    graduated: true
+  },
+  {
+    _id: ObjectId('688b19837c3a754a6ac59f39'),
+    name: 'Eve',
+    age: 25,
+    course: 'Cybersecurity',
+    gpa: 3.5,
+    graduated: false
+  }
+]
+
+schoolDB> db.students.find({ $and: [ { gpa: { $gt: 3.5 } }, { graduated: false }]}).pretty()
+
+[
+  {
+    _id: ObjectId('688b19637c3a754a6ac59f35'),
+    name: 'Alice',
+    age: 22,
+    course: 'CS',
+    gpa: 3.7,
+    graduated: false
+  },
+  {
+    _id: ObjectId('688b19637c3a754a6ac59f37'),
+    name: 'Charlie',
+    age: 21,
+    course: 'DS',
+    gpa: 3.8,
+    graduated: false
+  }
+]
+
+schoolDB> db.students.updateOne( { name: "Bob" }, { $set: { gpa: 3.6 }})
+
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+schoolDB> db.students.deleteOne({ name: "Diana" })
+
+{ acknowledged: true, deletedCount: 1 }
+
+schoolDB> db.students.deleteMany({ graduated: true })
+
+{ acknowledged: true, deletedCount: 1 }
+
+schoolDB> db.students.find().pretty()
+
+[
+  {
+    _id: ObjectId('688b19637c3a754a6ac59f35'),
+    name: 'Alice',
+    age: 22,
+    course: 'CS',
+    gpa: 3.7,
+    graduated: false
+  },
+  {
+    _id: ObjectId('688b19637c3a754a6ac59f37'),
+    name: 'Charlie',
+    age: 21,
+    course: 'DS',
+    gpa: 3.8,
+    graduated: false
+  },
+  {
+    _id: ObjectId('688b19837c3a754a6ac59f39'),
+    name: 'Eve',
+    age: 25,
+    course: 'Cybersecurity',
+    gpa: 3.5,
+    graduated: false
+  }
+]
+
+schoolDB> show collections
+
+students

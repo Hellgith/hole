@@ -1,0 +1,51 @@
+SOFTWARE LABORATORY 1
+GROUP A – EXPERIMENT 6
+TITLE:
+Write a PL/SQL block of code using parameterized Cursor that will merge the data available in the newly created table N_Roll_Call with the data available in the table O_Roll_Call. If the data in the first table already exists in the second table then that data should be skipped. 
+Note: Instructor will frame the problem statement for writing PL/SQL block using all types of Cursors in line with above statement.
+CODE:
+mysql> CREATE DATABASE RollCallDB; 
+Query OK, 1 row affected (0.01 sec)
+mysql> USE RollCallDB; 
+Database changed 
+mysql> CREATE TABLE O_Roll_Call (Roll_No INT PRIMARY KEY, Student_Name VARCHAR(100)); 
+Query OK, 0 rows affected (0.05 sec)
+mysql> CREATE TABLE N_Roll_Call (Roll_No INT PRIMARY KEY, Student_Name VARCHAR(100)); 
+Query OK, 0 rows affected (0.03 sec)
+mysql> INSERT INTO N_Roll_Call (Roll_No, Student_Name) VALUES (1, 'Alice'),(2, 'Bob'),(3, 'Charlie'); 
+Query OK, 3 rows affected (0.02 sec) Records: 3 Duplicates: 0 Warnings: 0
+mysql> INSERT INTO O_Roll_Call (Roll_No, Student_Name) VALUES (2, 'Bob'), (4, 'David');
+Query OK, 2 rows affected (0.01 sec) Records: 2 Duplicates: 0 Warnings: 0
+mysql> DELIMITER $$ 
+mysql> CREATE PROCEDURE merge_roll_call() 
+          -> BEGIN 
+          ->     DECLARE done INT DEFAULT 0; 
+          ->     DECLARE v_roll_no INT; 
+          ->     DECLARE v_student_name VARCHAR(100); 
+          ->     DECLARE cur1 CURSOR FOR 
+          ->         SELECT Roll_No, Student_Name FROM N_Roll_Call; 
+          ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1; 
+          ->     OPEN cur1; 
+          ->     read_loop: LOOP 
+          ->         FETCH cur1 INTO v_roll_no, v_student_name; 
+          ->         IF done THEN 
+          ->             LEAVE read_loop; 
+          ->         END IF; 
+          ->         IF NOT EXISTS (SELECT 1 FROM O_Roll_Call WHERE Roll_No = v_roll_no) THEN 
+          ->             INSERT INTO O_Roll_Call (Roll_No, Student_Name) 
+          ->             VALUES (v_roll_no, v_student_name); 
+          ->         END IF; 
+          ->     END LOOP; 
+          ->     CLOSE cur1; 
+          -> END$$ 
+Query OK, 0 rows affected (0.01 sec)
+mysql> DELIMITER ; 
+mysql> CALL merge_roll_call(); 
+Query OK, 0 rows affected (0.02 sec)
+mysql> SELECT * FROM O_Roll_Call; 
+Roll_No	Student_Name
+1	Alice
+2	Bob
+3	Charlie
+4	David
+4 rows in set (0.00 sec)
